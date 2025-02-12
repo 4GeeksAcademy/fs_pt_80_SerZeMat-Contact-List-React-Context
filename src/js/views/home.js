@@ -1,15 +1,27 @@
-import React from "react";
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useContext, useEffect } from "react";
+import { Context } from "../store/appContext";
 import "../../styles/home.css";
+import { ContactCard } from "../component/contactCard.jsx";
 
-export const Home = () => (
-	<div className="text-center mt-5">
-		<h1>Hello Rigo!</h1>
-		<p>
-			<img src={rigoImage} />
-		</p>
-		<a href="#" className="btn btn-success">
-			If you see this green button, bootstrap is working
-		</a>
-	</div>
-);
+
+export const Home = () => {
+    const { store, actions } = useContext(Context);
+
+    useEffect(() => {
+        actions.getContact(); // Cargar contactos al montar el componente
+    }, []);
+
+    return (
+        <div className="container mt-4">
+            <div className="list-group">
+                {store.contacts.length > 0 ? (
+                    store.contacts.map((contact) => (
+                        <ContactCard key={contact.id} contact={contact} />
+                    ))
+                ) : (
+                    <p className="text-center text-secondary">No contacts available.</p>
+                )}
+            </div>
+        </div>
+    );
+};
